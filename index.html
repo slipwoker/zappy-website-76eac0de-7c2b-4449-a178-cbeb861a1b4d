@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>טיפול בבעלי חיים — מתן כלבים</title>
+    <meta name="description" content="מחפשים מישהו שיטפל בכלב שלכם כאילו הוא שלו? מתן כלבים מציע שירות מתן כלבים אישי ומלא אהבה לכלבים קטנים. בטוח, חם ואמין — בדיוק מה שהכלב שלכם צריך!">
+    <meta name="keywords" content="טיפול בבעלי חיים, מתן כלבים קטנים באזור, שירות מתן כלבים, מתן כלבים לבעלי עבודה">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '76eac0de-7c2b-4449-a178-cbeb861a1b4d',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="טיפול בבעלי חיים — מתן כלבים">
+    <meta property="og:description" content="מחפשים מישהו שיטפל בכלב שלכם כאילו הוא שלו? מתן כלבים מציע שירות מתן כלבים אישי ומלא אהבה לכלבים קטנים. בטוח, חם ואמין — בדיוק מה שהכלב שלכם צריך!">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="טיפול בבעלי חיים — מתן כלבים">
+    <meta name="twitter:description" content="מחפשים מישהו שיטפל בכלב שלכם כאילו הוא שלו? מתן כלבים מציע שירות מתן כלבים אישי ומלא אהבה לכלבים קטנים. בטוח, חם ואמין — בדיוק מה שהכלב שלכם צריך!">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-light) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-light) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-light) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/logo.webp" alt="מתן כלבים" class="logo">
+      </a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="/">בית</a></li><li><a href="/services">שירותים</a></li><li><a href="/about">אודות</a></li></ul></div>
+
+    
+
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-light)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main>
+    <section class="index-hero-section" data-layout-spec="בית-hero" dir="rtl" data-hero-type="fullscreen-scrim">
+  <!-- Background Image -->
+  <div class="index-hero-bg">
+    <img data-hero-bg="true" data-placeholder="index-hero-image-1" data-context="A warm golden-hour neighborhood scene: a cheerful 10-year-old Israeli boy walking a small fluffy dog on a leash along a sunny residential street. The boy is smiling, wearing casual clothes, holding the leash with care. The small dog — perhaps a Shih Tzu or Bichon — trots happily beside him. Soft sunset light, warm amber and peach tones, lush green trees lining the sidewalk, cozy neighborhood homes in the background. Cinematic but friendly, storybook warmth, photorealistic illustration style with subtle paper texture." width="1200" height="700" src="/assets/site-index-hero-image-1.webp" alt="מתן ילד בן 10 מטייל עם כלב קטן וחמוד בשכונה בשקיעה">
+  </div>
+
+  <!-- Scrim Overlay -->
+  <div class="index-hero-scrim" aria-hidden="true"></div>
+
+  <!-- Paper Texture Overlay -->
+  <div class="index-hero-texture" aria-hidden="true"></div>
+
+  <!-- Hero Content -->
+  <div class="index-hero-content">
+    <div class="index-hero-eyebrow">🐾 שירות שמירה על כלבים</div>
+    <h1 class="index-hero-h1">אוהב כלבים?<br>הכלב שלך<br>בידיים טובות</h1>
+    <h3 class="index-hero-subtitle">אני מתן, בן 10, ואני מת על כלבים — במיוחד קטנים!<br>אשמור על הכלב שלך בחום, באחריות ובהרבה אהבה.</h3>
+    <div class="index-hero-ctas">
+      <a href="/contact" class="index-hero-btn-primary">
+        <i class="fa-solid fa-paw" aria-hidden="true"></i>
+        צרו איתי קשר
+      </a>
+      <a href="/services" class="index-hero-btn-secondary">
+        השירותים שלי
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Wave Divider -->
+  <div class="index-hero-divider-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Leash-line arc motif -->
+      <path d="M0,100 L0,55 Q80,30 180,50 Q300,72 420,42 Q540,14 660,38 Q780,60 900,32 Q1020,6 1100,28 Q1150,38 1200,30 L1200,100 Z" fill="#FEF0E4"></path>
+      <path d="M0,100 L0,68 Q120,52 260,62 Q400,72 520,58 Q640,44 760,56 Q880,68 1000,50 Q1100,36 1200,46 L1200,100 Z" fill="#FEF0E4" opacity="0.5"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="index-services-section" data-layout-spec="בית-services" dir="rtl">
+  <!-- Decorative teal blob background -->
+  <div class="index-services-blob" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
+      <path d="M480,60 Q560,120 540,220 Q520,320 440,380 Q360,440 260,420 Q160,400 100,320 Q40,240 80,140 Q120,40 220,20 Q320,0 400,30 Z" fill="var(--primary)" opacity="0.08"></path>
+    </svg>
+  </div>
+
+  <!-- Decorative paw prints -->
+  <div class="index-services-paws" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" width="120" height="200">
+      <g opacity="0.18" fill="var(--secondary)">
+        <!-- Paw 1 -->
+        <ellipse cx="30" cy="20" rx="8" ry="10"></ellipse>
+        <ellipse cx="50" cy="14" rx="7" ry="9"></ellipse>
+        <ellipse cx="68" cy="20" rx="7" ry="9"></ellipse>
+        <ellipse cx="82" cy="34" rx="6" ry="8"></ellipse>
+        <ellipse cx="55" cy="42" rx="18" ry="22"></ellipse>
+        <!-- Paw 2 -->
+        <ellipse cx="20" cy="110" rx="7" ry="9"></ellipse>
+        <ellipse cx="38" cy="104" rx="6" ry="8"></ellipse>
+        <ellipse cx="55" cy="110" rx="6" ry="8"></ellipse>
+        <ellipse cx="67" cy="122" rx="5" ry="7"></ellipse>
+        <ellipse cx="42" cy="132" rx="16" ry="20"></ellipse>
+        <!-- Paw 3 -->
+        <ellipse cx="50" cy="195" rx="6" ry="8"></ellipse>
+        <ellipse cx="66" cy="189" rx="5" ry="7"></ellipse>
+        <ellipse cx="80" cy="195" rx="5" ry="7"></ellipse>
+        <ellipse cx="90" cy="206" rx="4" ry="6"></ellipse>
+        <ellipse cx="68" cy="214" rx="14" ry="18"></ellipse>
+      </g>
+    </svg>
+  </div>
+
+  <div class="index-services-container">
+    <!-- Content Column (START = RIGHT in RTL) -->
+    <div class="index-services-content">
+      <div class="index-services-label">מה אני מציע</div>
+      <h2 class="index-services-heading">השירותים שלי לכלבים שלכם 🐾</h2>
+      <p class="index-services-intro">אני מתן, בן 10, ואני אוהב כלבים מכל הלב. אני מציע טיפול אישי, חם ואחראי — בעיקר לכלבים קטנים שצריכים תשומת לב מיוחדת ואהבה אמיתית.</p>
+
+      <!-- Service Cards -->
+      <div class="index-services-cards">
+        <!-- Card 1 -->
+        <article class="index-service-card">
+          <div class="index-service-card-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="18" cy="18" r="17" fill="var(--secondary)" opacity="0.25"></circle>
+              <path d="M18 10 C14 10 10 13 10 17 C10 22 14 25 18 27 C22 25 26 22 26 17 C26 13 22 10 18 10Z" stroke="var(--accent)" stroke-width="2" fill="none"></path>
+              <circle cx="14" cy="15" r="2" fill="var(--accent)"></circle>
+              <circle cx="22" cy="15" r="2" fill="var(--accent)"></circle>
+              <path d="M14 20 Q18 24 22 20" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" fill="none"></path>
+            </svg>
+          </div>
+          <div class="index-service-card-content">
+            <div class="index-service-card-sticker">🏠</div>
+            <h3>שמירה ביום</h3>
+            <p>הכלב שלכם יישאר אצלי בבית כשאתם בעבודה. אני אשמור עליו, אשחק איתו ואדאג שהוא מאושר ובטוח כל היום.</p>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="index-service-card index-service-card--accent">
+          <div class="index-service-card-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="18" cy="18" r="17" fill="var(--primary)" opacity="0.2"></circle>
+              <path d="M8 22 Q12 14 18 16 Q24 18 28 14" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+              <circle cx="26" cy="12" r="3" fill="var(--primary)" opacity="0.6"></circle>
+              <path d="M10 26 L10 22" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"></path>
+              <path d="M14 28 L14 24" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"></path>
+              <path d="M18 27 L18 24" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="index-service-card-content">
+            <div class="index-service-card-sticker">🦮</div>
+            <h3>טיולים בשכונה</h3>
+            <p>אני לוקח את הכלב לטיול נחמד ברחוב, בקצב שמתאים לו. טיולים קצרים ובטוחים — בעיקר לכלבים קטנים שאוהבים לרחרח ולהתרגש.</p>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="index-service-card">
+          <div class="index-service-card-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="18" cy="18" r="17" fill="var(--secondary)" opacity="0.25"></circle>
+              <path d="M12 20 C12 16 15 13 18 13 C21 13 24 16 24 20 C24 23 22 25 18 26 C14 25 12 23 12 20Z" stroke="var(--secondary)" stroke-width="2" fill="var(--secondary)" fill-opacity="0.15"></path>
+              <path d="M15 17 C15 15 16.5 14 18 14" stroke="var(--secondary)" stroke-width="1.5" stroke-linecap="round"></path>
+              <circle cx="15" cy="11" r="2.5" fill="var(--secondary)" opacity="0.7"></circle>
+              <circle cx="21" cy="11" r="2.5" fill="var(--secondary)" opacity="0.7"></circle>
+              <circle cx="10" cy="14" r="2" fill="var(--secondary)" opacity="0.7"></circle>
+              <circle cx="26" cy="14" r="2" fill="var(--secondary)" opacity="0.7"></circle>
+            </svg>
+          </div>
+          <div class="index-service-card-content">
+            <div class="index-service-card-sticker">💛</div>
+            <h3>טיפול עדין לכלבים קטנים</h3>
+            <p>כלבים קטנים צריכים עדינות וסבלנות. אני מכיר את זה ומתייחס לכל כלב כאילו הוא שלי — בעדינות, בשקט ובאהבה אמיתית.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Imagery Column (END = LEFT in RTL) -->
+    <div class="index-services-imagery">
+      <!-- Back paper tile (peeking from bottom-end corner) -->
+      <div class="index-services-back-tile" aria-hidden="true"></div>
+
+      <!-- Main photo -->
+      <div class="index-services-main-photo-wrap">
+        <img data-placeholder="index-services-image-1" data-context="A warm, cozy indoor scene of a happy 10-year-old Israeli boy gently holding and cuddling a small fluffy dog (like a Maltese or Shih Tzu) on a soft sofa, natural window light, warm cream and peach tones, candid and heartwarming, storybook-style photography" width="520" height="420" src="/assets/site-index-services-image-1.webp" alt="מתן מחבק כלב קטן וחמוד בבית" class="index-services-main-photo">
+        <!-- Hand-drawn leash doodle -->
+        <svg class="index-services-leash-doodle" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg" width="80" height="120">
+          <path d="M40 5 Q55 30 45 55 Q35 80 50 105" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" fill="none" opacity="0.55"></path>
+          <circle cx="40" cy="5" r="5" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.55"></circle>
+        </svg>
+      </div>
+
+      <!-- Smaller peeking photo tile -->
+      <div class="index-services-small-tile-wrap">
+        <img data-placeholder="index-services-image-2" data-context="Close-up of a tiny cute small dog (Chihuahua or Pomeranian) with big eyes looking up adorably, warm golden light, shallow depth of field, playful and endearing, cream and peach color tones, pet photography style" width="240" height="200" src="/assets/site-index-services-image-2.webp" alt="כלב קטן וחמוד מסתכל למעלה" class="index-services-small-photo">
+        <!-- Sticker paw accent -->
+        <div class="index-services-paw-sticker" aria-hidden="true">🐾</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom torn-paper divider -->
+  <div class="index-services-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,70 L0,28 Q30,22 60,30 T130,24 Q170,28 210,20 T290,26 Q330,22 370,30 T450,22 Q490,28 530,18 T610,24 Q650,20 690,28 T770,20 Q810,26 850,18 T930,24 Q970,20 1010,28 T1090,22 Q1130,28 1170,20 L1200,24 L1200,70 Z" fill="rgba(255,255,255,0.18)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="index-benefits-section" data-layout-spec="בית-benefits" dir="rtl">
+  <!-- Grain texture overlay -->
+  <div class="index-benefits-grain" aria-hidden="true"></div>
+
+  <!-- Decorative floating hearts -->
+  <svg class="index-benefits-deco-hearts" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <path d="M30,20 C30,14 24,10 18,14 C12,10 6,14 6,20 C6,26 18,36 18,36 C18,36 30,26 30,20 Z" fill="rgba(255,255,255,0.18)"></path>
+    <path d="M90,55 C90,50 85,47 80,50 C75,47 70,50 70,55 C70,60 80,68 80,68 C80,68 90,60 90,55 Z" fill="rgba(255,255,255,0.12)"></path>
+    <path d="M110,15 C110,11 106,9 102,11 C98,9 94,11 94,15 C94,19 102,25 102,25 C102,25 110,19 110,15 Z" fill="rgba(255,179,138,0.25)"></path>
+  </svg>
+
+  <!-- Decorative paw prints -->
+  <svg class="index-benefits-deco-paws" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30" cy="30" r="7" fill="rgba(255,255,255,0.08)"></circle>
+    <ellipse cx="30" cy="55" rx="12" ry="15" fill="rgba(255,255,255,0.06)"></ellipse>
+    <circle cx="14" cy="42" r="5" fill="rgba(255,255,255,0.06)"></circle>
+    <circle cx="46" cy="42" r="5" fill="rgba(255,255,255,0.06)"></circle>
+    <circle cx="30" cy="130" r="7" fill="rgba(255,179,138,0.12)"></circle>
+    <ellipse cx="30" cy="155" rx="12" ry="15" fill="rgba(255,179,138,0.08)"></ellipse>
+    <circle cx="14" cy="142" r="5" fill="rgba(255,179,138,0.08)"></circle>
+    <circle cx="46" cy="142" r="5" fill="rgba(255,179,138,0.08)"></circle>
+  </svg>
+
+  <div class="index-benefits-container">
+    <!-- Section header -->
+    <header class="index-benefits-header">
+      <span class="index-benefits-eyebrow">למה לבחור במתן?</span>
+      <h2 class="index-benefits-title">הסיבות שבגללן ההורים של הכלבים סומכים עלי 🐾</h2>
+      <p class="index-benefits-subtitle">אני מתן, בן 10, ואני אוהב כלבים מכל הלב. כשהכלב שלכם אצלי — הוא בידיים טובות, חמות, ואמיתיות.</p>
+    </header>
+
+    <!-- Benefits grid -->
+    <div class="index-benefits-grid">
+
+      <!-- Benefit 1: Love for animals -->
+      <article class="index-benefits-card">
+        <div class="index-benefits-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="28" fill="rgba(255,255,255,0.15)"></circle>
+            <path d="M32,46 C32,46 14,34 14,23 C14,17 19,13 24,13 C27,13 30,15 32,17 C34,15 37,13 40,13 C45,13 50,17 50,23 C50,34 32,46 32,46 Z" fill="var(--text-light)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"></path>
+          </svg>
+        </div>
+        <div class="index-benefits-card-content">
+          <h3 class="index-benefits-card-title">אהבה אמיתית לכלבים</h3>
+          <p class="index-benefits-card-text">אני לא עושה את זה רק בשביל כסף — אני פשוט אוהב כלבים. כל כלב שמגיע אלי מקבל חיבוק, משחק, ותשומת לב מלאה. הכלב שלכם ירגיש זאת מיד.</p>
+        </div>
+      </article>
+
+      <!-- Benefit 2: Small dogs specialty -->
+      <article class="index-benefits-card">
+        <div class="index-benefits-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="28" fill="rgba(255,255,255,0.15)"></circle>
+            <!-- Small dog silhouette -->
+            <ellipse cx="28" cy="38" rx="13" ry="9" fill="var(--text-light)"></ellipse>
+            <circle cx="42" cy="30" r="8" fill="var(--text-light)"></circle>
+            <!-- ear -->
+            <ellipse cx="46" cy="24" rx="4" ry="6" fill="rgba(255,255,255,0.7)" transform="rotate(15,46,24)"></ellipse>
+            <!-- tail -->
+            <path d="M15,35 Q8,28 12,22" stroke="var(--text-light)" stroke-width="3" fill="none" stroke-linecap="round"></path>
+            <!-- leg -->
+            <rect x="23" y="45" width="4" height="7" rx="2" fill="var(--text-light)"></rect>
+            <rect x="31" y="45" width="4" height="7" rx="2" fill="var(--text-light)"></rect>
+          </svg>
+        </div>
+        <div class="index-benefits-card-content">
+          <h3 class="index-benefits-card-title">מומחה לכלבים קטנים</h3>
+          <p class="index-benefits-card-text">כלבים קטנים הם ההתמחות שלי! אני יודע איך לטפל בהם בעדינות, בסבלנות ובאהבה. הם לא מפחידים אותי — הם פשוט הכי חמודים שיש.</p>
+        </div>
+      </article>
+
+      <!-- Benefit 3: Personal attention -->
+      <article class="index-benefits-card">
+        <div class="index-benefits-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="28" fill="rgba(255,255,255,0.15)"></circle>
+            <!-- Star/attention icon -->
+            <path d="M32,14 L35,26 L48,26 L38,34 L41,46 L32,38 L23,46 L26,34 L16,26 L29,26 Z" fill="var(--text-light)" stroke="rgba(255,255,255,0.4)" stroke-width="1"></path>
+          </svg>
+        </div>
+        <div class="index-benefits-card-content">
+          <h3 class="index-benefits-card-title">תשומת לב אישית לכל כלב</h3>
+          <p class="index-benefits-card-text">אצלי, הכלב שלכם לא אבוד בין עשרות כלבים אחרים. אני מטפל בכלבים בודדים כדי שכל אחד יקבל את כל הזמן, האהבה, והמשחקים שמגיעים לו.</p>
+        </div>
+      </article>
+
+      <!-- Benefit 4: Neighborhood convenience -->
+      <article class="index-benefits-card">
+        <div class="index-benefits-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="28" fill="rgba(255,255,255,0.15)"></circle>
+            <!-- Location pin -->
+            <path d="M32,16 C25,16 20,21 20,28 C20,37 32,50 32,50 C32,50 44,37 44,28 C44,21 39,16 32,16 Z" fill="var(--text-light)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"></path>
+            <circle cx="32" cy="28" r="5" fill="var(--secondary)"></circle>
+          </svg>
+        </div>
+        <div class="index-benefits-card-content">
+          <h3 class="index-benefits-card-title">שכן קרוב ונגיש</h3>
+          <p class="index-benefits-card-text">אני גר בשכונה שלכם ומציע שירות מתן כלבים קרוב לבית. אפשר לבוא לאסוף, לבוא להכיר, ולדעת שהכלב שלכם נמצא ממש בקרבת מקום — בטוח ושמח.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Feature image -->
+    <div class="index-benefits-image-wrap">
+      <img data-placeholder="index-benefits-image-1" data-context="A cheerful 10-year-old Israeli boy sitting on a park bench with a small fluffy dog on his lap, both looking happy and comfortable. Warm afternoon sunlight, neighborhood setting, genuine joyful expression, casual clothes. The image should feel warm, personal, and trustworthy — like a friendly neighborhood kid who genuinely loves animals." width="600" height="400" src="/assets/site-index-benefits-image-1.webp" alt="מתן עם כלב קטן וחמוד בפארק השכונה" class="index-benefits-img">
+      <div class="index-benefits-img-badge">
+        <span class="index-benefits-badge-emoji">🐾</span>
+        <span class="index-benefits-badge-text">10 שנים של אהבה לכלבים</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom scallop wave divider -->
+  <div class="index-benefits-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,45 Q60,20 120,45 Q180,70 240,45 Q300,20 360,45 Q420,70 480,45 Q540,20 600,45 Q660,70 720,45 Q780,20 840,45 Q900,70 960,45 Q1020,20 1080,45 Q1140,70 1200,45 L1200,90 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="index-testimonials-section" data-layout-spec="בית-testimonials" dir="rtl">
+  <!-- Decorative background blobs -->
+  <div class="its-blob its-blob-1" aria-hidden="true"></div>
+  <div class="its-blob its-blob-2" aria-hidden="true"></div>
+
+  <div class="its-container">
+
+    <!-- Magazine-style intro block -->
+    <div class="its-intro">
+      <div class="its-intro-text">
+        <span class="its-eyebrow">מה אומרים עלינו</span>
+        <h2 class="its-heading">הורים מרוצים, כלבים שמחים</h2>
+        <p class="its-subheading">כשאתם עוזבים לעבודה, לנסיעה, או סתם צריכים יד עוזרת — אני כאן. הנה מה שמשפחות מהשכונה סיפרו על הטיפול שקיבלו הכלבים שלהם.</p>
+      </div>
+      <div class="its-intro-image-wrap">
+        <img data-placeholder="index-testimonials-image-1" data-context="A warm, heartfelt scene of a happy small dog (like a Maltese or Chihuahua) being gently held or cuddled by a 10-year-old boy in a cozy neighborhood setting. Soft natural light, warm tones, storybook-style illustration quality. The child looks caring and responsible, the dog looks content and safe." width="420" height="340" src="/assets/site-index-testimonials-image-1.webp" alt="מתן מחזיק כלב קטן מאושר" class="its-intro-image">
+        <!-- Floating hearts decoration -->
+        <svg class="its-hearts" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20,35 C20,28 28,22 35,28 C42,22 50,28 50,35 C50,44 35,54 35,54 C35,54 20,44 20,35Z" fill="#E56B6F" opacity="0.35"></path>
+          <path d="M75,18 C75,13 81,9 86,13 C91,9 97,13 97,18 C97,25 86,33 86,33 C86,33 75,25 75,18Z" fill="#FFB38A" opacity="0.45"></path>
+          <path d="M10,80 C10,76 14,72 18,76 C22,72 26,76 26,80 C26,85 18,91 18,91 C18,91 10,85 10,80Z" fill="#E56B6F" opacity="0.25"></path>
+          <path d="M95,70 C95,66 99,63 102,66 C105,63 109,66 109,70 C109,75 102,80 102,80 C102,80 95,75 95,70Z" fill="#FFB38A" opacity="0.3"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Three-card review layout (asymmetric) -->
+    <div class="its-cards-grid">
+
+      <!-- Featured (large) card -->
+      <article class="its-card its-card--featured">
+        <div class="its-quote-mark" aria-hidden="true">“</div>
+        <blockquote class="its-quote-text">
+          השארנו את הצ'יוואווה הקטנה שלנו, לונה, אצל מתן לשלושה ימים. לא האמנו שנמצא מישהו כל כך אכפתי ואחראי. מתן עדכן אותנו בתמונות כל יום, ולונה חזרה הביתה שמחה ורגועה. ממליצים בחום לכל מי שמחפש טיפול בבעלי חיים אמיתי ואוהב!
+        </blockquote>
+        <footer class="its-card-footer">
+          <div class="its-avatar" aria-hidden="true">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" data-element-type="icon" data-icon-type="svg">
+              <circle cx="24" cy="24" r="24" fill="#FFB38A" opacity="0.3"></circle>
+              <circle cx="24" cy="20" r="8" fill="#FFB38A"></circle>
+              <ellipse cx="24" cy="38" rx="13" ry="8" fill="#FFB38A"></ellipse>
+            </svg>
+          </div>
+          <div class="its-reviewer-info">
+            <strong class="its-reviewer-name">מיכל ואורי לוי</strong>
+            <span class="its-reviewer-sub">בעלי לונה, צ'יוואווה</span>
+          </div>
+          <div class="its-stars" aria-label="דירוג 5 כוכבים">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+        </footer>
+      </article>
+
+      <!-- Two smaller cards -->
+      <div class="its-cards-side">
+
+        <article class="its-card its-card--small">
+          <div class="its-quote-mark its-quote-mark--small" aria-hidden="true">“</div>
+          <blockquote class="its-quote-text">
+            מתן טיפל בביגל שלנו, קוקי, בזמן שעבדתי. הוא כל כך סבלני ואוהב — קוקי פשוט נדבק אליו. שירות מתן כלבים קטנים באזור שלנו הוא בדיוק מה שחיפשנו.
+          </blockquote>
+          <footer class="its-card-footer">
+            <div class="its-avatar" aria-hidden="true">
+              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" data-element-type="icon" data-icon-type="svg">
+                <circle cx="24" cy="24" r="24" fill="#3FA7A3" opacity="0.2"></circle>
+                <circle cx="24" cy="20" r="8" fill="#3FA7A3"></circle>
+                <ellipse cx="24" cy="38" rx="13" ry="8" fill="#3FA7A3"></ellipse>
+              </svg>
+            </div>
+            <div class="its-reviewer-info">
+              <strong class="its-reviewer-name">רחל כהן</strong>
+              <span class="its-reviewer-sub">בעלת קוקי, ביגל</span>
+            </div>
+            <div class="its-stars" aria-label="דירוג 5 כוכבים">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+          </footer>
+        </article>
+
+        <article class="its-card its-card--small">
+          <div class="its-quote-mark its-quote-mark--small" aria-hidden="true">“</div>
+          <blockquote class="its-quote-text">
+            הייתי חששנית להשאיר את הפומרניאן שלי עם מישהו חדש, אבל מתן הפתיע אותי. תקשורת מעולה, אחריות מרשימה, ובאמת אהבה לכלבים. אני ממליצה בלב שלם!
+          </blockquote>
+          <footer class="its-card-footer">
+            <div class="its-avatar" aria-hidden="true">
+              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" data-element-type="icon" data-icon-type="svg">
+                <circle cx="24" cy="24" r="24" fill="#E56B6F" opacity="0.2"></circle>
+                <circle cx="24" cy="20" r="8" fill="#E56B6F"></circle>
+                <ellipse cx="24" cy="38" rx="13" ry="8" fill="#E56B6F"></ellipse>
+              </svg>
+            </div>
+            <div class="its-reviewer-info">
+              <strong class="its-reviewer-name">נועה שמיר</strong>
+              <span class="its-reviewer-sub">בעלת ברברה, פומרניאן</span>
+            </div>
+            <div class="its-stars" aria-label="דירוג 5 כוכבים">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+          </footer>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- Closing CTA strip -->
+    <div class="its-cta-strip">
+      <div class="its-cta-content">
+        <p class="its-cta-tagline">גם הכלב שלכם מגיע לאהבה אמיתית 🐾</p>
+        <h3 class="its-cta-title">בואו נדבר — אשמח לטפל בכלב שלכם!</h3>
+        <a href="/contact" class="its-cta-btn btn-primary">
+          <i class="fas fa-paw"></i>
+          צרו קשר עכשיו
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Soft gradient fade bottom -->
+  <div class="its-fade-bottom" aria-hidden="true"></div>
+
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-top">
+    <div class="footer-container">
+
+      <!-- Column 1: Company Info -->
+      <div class="footer-col footer-brand">
+        <img src="/assets/logo.webp" alt="מתן כלבים" class="logo">
+        <p class="footer-tagline">טיפול אוהב ומסור לכלבים שלכם — כמו בבית, רק יותר כיף 🐾</p>
+        <div class="footer-social">
+          <a href="[facebook_handle]" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="[instagram_handle]" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="[whatsapp_handle]" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Quick Links -->
+      <div class="footer-col">
+        <h3 class="footer-heading">ניווט מהיר</h3>
+        <ul class="footer-links">
+          <li><a href="/">בית</a></li>
+          <li><a href="/services">שירותים</a></li>
+          <li><a href="/about">אודות</a></li>
+          <li><a href="/contact">צור קשר</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Contact Info -->
+      <div class="footer-col">
+        <h3 class="footer-heading">יצירת קשר</h3>
+        <ul class="footer-contact">
+          <li>
+            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+            <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+          </li>
+          <li>
+            <span class="contact-icon"><i class="fas fa-phone"></i></span>
+            <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+          </li>
+          <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+            <span class="contact-text">[business_address]</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Hours / Extra -->
+      <div class="footer-col">
+        <h3 class="footer-heading">שעות פעילות</h3>
+        <ul class="footer-hours">
+          <li><a href="/"><span>ראשון – חמישי</span><span>07:00 – 20:00</span></a></li>
+          <li><a href="/"><span>שישי</span><span>07:00 – 14:00</span></a></li>
+          <li><a href="/"><span>שבת</span><span>סגור</span></a></li>
+        </ul>
+        <div class="footer-paw-deco" aria-hidden="true">🐾</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="footer-container footer-bottom-inner">
+      <p class="footer-copy">© 2026 מתן כלבים. כל הזכויות שמורות.</p>
+      <div class="footer-legal">
+        <a href="/privacy">מדיניות פרטיות</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="/terms">תנאי שימוש</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="/accessibility">נגישות</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(255,248,239,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>
