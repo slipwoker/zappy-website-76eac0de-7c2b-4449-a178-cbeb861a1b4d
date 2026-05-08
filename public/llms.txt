@@ -7,33 +7,33 @@
 ## Pages
 
 ### בית
-https://-76eac0de.zappy5.app
+https://example.com
 מחפשים מישהו שיטפל בכלב שלכם כאילו הוא שלו? מתן כלבים מציע שירות מתן כלבים אישי ומלא אהבה לכלבים קטנים. בטוח, חם ואמין — בדיוק מה שהכלב שלכם צריך!
 
 ### שירותים
-https://-76eac0de.zappy5.app/services
+https://example.com/services
 גלו את כל שירותי המתן של מתן כלבים — מתן יומי, שמירה לסופי שבוע ועוד, עם דגש מיוחד על כלבים קטנים. שירות מתן כלבים אישי שמתאים בדיוק לכם ולכלב שלכם!
 
 ### אודות
-https://-76eac0de.zappy5.app/about
+https://example.com/about
 היכירו את מתן — ילד בן 10 עם לב ענק לכלבים! מתן כלבים נולד מאהבה אמיתית לבעלי חיים ולא מניסיון מקצועי. כי לפעמים הלב הוא הכישורים הכי טובים שיש לטיפול בבעלי חיים.
 
 ### צור קשר
-https://-76eac0de.zappy5.app/contact
+https://example.com/contact
 יש לכם שאלות על שירות מתן כלבים קטנים באזור? צרו קשר עם מתן עכשיו ונמצא יחד את הפתרון המושלם לכלב שלכם. מתן כלבים לבעלי עבודה — כי הכלב שלכם לא צריך לחכות לבד!
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://-76eac0de.zappy5.app/privacy
+https://example.com/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://-76eac0de.zappy5.app/terms
+https://example.com/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://-76eac0de.zappy5.app/accessibility
+https://example.com/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
@@ -43,8 +43,8 @@ Information about WCAG compliance and accessibility features.
 - (No contact details configured yet.)
 
 ### Contact form
-- URL: https://-76eac0de.zappy5.app/about
-- Endpoint: https://-76eac0de.zappy5.app/api/email/contact-form
+- URL: https://example.com/about
+- Endpoint: https://example.com/api/email/contact-form
 - Method: POST
 - Content-Type: application/json
 - Fields:
@@ -74,6 +74,6 @@ A 10-year-old dog lover offering dog sitting services, with a focus on small dog
 
 # Machine-readable feeds
 
-- Sitemap (XML): https://-76eac0de.zappy5.app/sitemap.xml
-- Robots: https://-76eac0de.zappy5.app/robots.txt
-- Flattened page text (for LLMs): https://-76eac0de.zappy5.app/llms-full.txt
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt
